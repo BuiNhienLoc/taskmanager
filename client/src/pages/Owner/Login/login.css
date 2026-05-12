@@ -1,0 +1,15 @@
+#button_verify_code {
+    color: cornflowerblue;
+    border: none;
+    /* padding: 10px 20px; */
+    /* border-radius: 5px; */
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+    background-color: transparent;
+}
+
+#button_verify_code:hover {
+    color: royalblue;
+    text-decoration: underline;
+}
