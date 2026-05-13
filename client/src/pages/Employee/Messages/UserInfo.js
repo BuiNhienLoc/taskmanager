@@ -1,7 +1,7 @@
 import { onSnapshot, query } from 'firebase/firestore';
 import React from 'react'
 import {useEffect, useState} from 'react';
-import {db} from '../../firebase';
+import {db} from '../../../firebase';
 import {collection, where} from 'firebase/firestore'
 import UserState from './UserState';
 import './UserState.css';

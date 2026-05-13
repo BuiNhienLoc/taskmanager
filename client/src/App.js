@@ -7,7 +7,11 @@ import OwnerDashboard from "./pages/Owner/Dashboard/dashboard";
 import UserManagement from "./pages/Owner/EmployeeManagement/UserManagement";
 import SetupAccount from "./pages/Employee/SetupAccount/SetupAccount";
 import Landing from "./pages/Landing/landing";
-import Messages from "./pages/Messages/Messages";
+import EmMessages from "./pages/Employee/Messages/Messages";
+import OwMessages from "./pages/Owner/Messages/Messages";
+import TaskManagement from "./pages/Owner/TaskManager/TaskManager";
+import MyTasks from "./pages/Employee/Tasks/MyTasks";
+
 
 import ProtectedOwnerRoute from "./routes/protectedOwnerRoute";
 
@@ -17,9 +21,14 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/setup-account" element={<SetupAccount />} />
         <Route path="/employee/login" element={<EmployeeLogin />} />
         <Route path="/employee/dashboard" element={<EmployeeDashboard />} />
-        <Route path="/setup-account" element={<SetupAccount />} />
+        <Route path="/employee/tasks" element={<MyTasks />} />
+        <Route path="/employee/messages" element={
+            <EmMessages />
+        } />
         <Route path="/owner/login" element={<OwnerLogin />} />
         <Route path="/owner/dashboard" element={
           <ProtectedOwnerRoute>
@@ -31,15 +40,19 @@ function App() {
             <UserManagement />
           </ProtectedOwnerRoute>
         } />
-        <Route path="/" element={<Landing />} />
         <Route path="/owner/messages" element={
           <ProtectedOwnerRoute>
-            <Messages />
+            <OwMessages />
           </ProtectedOwnerRoute>
         } />
-        <Route path="/employee/messages" element={
-            <Messages />
-        } />
+        <Route
+          path="/owner/tasks"
+          element={
+            <ProtectedOwnerRoute>
+              <TaskManagement />
+            </ProtectedOwnerRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

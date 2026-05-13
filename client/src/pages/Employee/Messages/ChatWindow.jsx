@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Form, Input, Button, Alert, Avatar, Badge, Typography } from "antd";
-import { auth } from "../../firebase";
-import { socket } from "../../socket";
+import { auth } from "../../../firebase";
+import { socket } from "../../../socket";
 import { AppContext } from "./Context/AppProvider";
 import Mess from "./Mess";
 import "./Chatwindow.css";

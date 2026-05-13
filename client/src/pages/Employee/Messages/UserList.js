@@ -1,7 +1,7 @@
 import React from 'react'
 import { AppContext } from './Context/AppProvider'
 import UserMessState from './UserMessState'
-import {auth} from '../../firebase';
+import {auth} from '../../../firebase';
 import FindMembers from './FindMembers';
 import "./UserList.css"
 

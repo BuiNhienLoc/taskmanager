@@ -1,0 +1,67 @@
+.task-page {
+  min-height: 100vh;
+  padding: 100px 32px 40px;
+  margin-left: 80px;
+  font-family: "Inter", sans-serif;
+}
+
+.task-page h1 {
+  color: #013567;
+  margin-bottom: 24px;
+}
+
+.task-form {
+  max-width: 700px;
+  display: grid;
+  gap: 14px;
+  margin-bottom: 32px;
+}
+
+.task-form input,
+.task-form textarea,
+.task-form select {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+.task-form textarea {
+  min-height: 100px;
+}
+
+.task-form button,
+.task-card button {
+  padding: 12px;
+  background-color: #009899;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* .task-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+} */
+
+.task-card {
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 3px 3px 8px #ededed;
+  background-color: white;
+}
+
+.task-card h3 {
+  color: #009899;
+  margin-top: 0;
+}
+
+.task-card select {
+  width: 100%;
+  padding: 10px;
+  margin: 12px 0;
+  border-radius: 8px;
+}

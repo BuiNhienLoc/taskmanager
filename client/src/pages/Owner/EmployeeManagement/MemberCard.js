@@ -10,7 +10,7 @@ import profilePic from "../../../components/assets/profile.png";
 
 const { Meta } = Card;
 
-function MemberCard({role, name, email, avatar}) { 
+function MemberCard({role, name, email, avatar, phoneNumber}) { 
 
     const {isUserInfoVisible, setIsUserInfoVisible} = useContext(UserContext);
 
@@ -33,11 +33,13 @@ function MemberCard({role, name, email, avatar}) {
         extra={<FullscreenExitOutlined onClick={()=>{setIsUserInfoVisible(false)}} />}>
             <Meta
                 avatar={<Avatar src={avatar || profilePic} alt="avatar" />}
-                title="Medime Personal Card">
+                 title="Personal Card"
+                >
             </Meta>
             <p><i>Position: </i>{role}</p>
             <p><b>Name: </b>{name}</p>
             <p><b>Email: </b>{email}</p>
+            <p><b>Phone: </b>{phoneNumber}</p>
         </Card>
     </div>
   )

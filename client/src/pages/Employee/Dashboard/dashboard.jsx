@@ -42,7 +42,7 @@ function Dashboard() {
       title: "Tasks",
       description: "Check your assigned tasks and update their status.",
       icon: <GiChart />,
-      path: "/report/overview",
+      path: "/employee/tasks",
     },
   ];
 

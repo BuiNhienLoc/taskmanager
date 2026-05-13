@@ -27,6 +27,7 @@ function Dashboard() {
       title: "Manage accounts",
       description: "Checkout and manage your accounts.",
       icon: <AiOutlineUnorderedList />,
+      path: "/owner/user-management",
     },
     {
       title: "Message",

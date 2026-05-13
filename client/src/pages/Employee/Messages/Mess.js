@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react'
 import { Avatar, Typography } from 'antd';
 import styled from 'styled-components';
 import { formatRelative } from 'date-fns';
-import { auth } from '../../firebase';
+import { auth } from '../../../firebase';
 import './Mess.css';
 
 function formatDate(seconds) {

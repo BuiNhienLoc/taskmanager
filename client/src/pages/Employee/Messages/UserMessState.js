@@ -3,7 +3,7 @@ import { Avatar, Badge, Typography } from 'antd';
 import styled from 'styled-components';
 import { AppContext } from './Context/AppProvider';
 import { getDoc, doc, updateDoc } from 'firebase/firestore';
-import { db } from '../../firebase';
+import { db } from '../../../firebase';
 
 const WrapperStyled = styled.div`
   margin-bottom: 10px;

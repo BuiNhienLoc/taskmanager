@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
-import { auth, db } from "../../firebase";
+import { auth, db } from "../../../firebase";
 import { query, collection, getDocs, where } from "firebase/firestore";
 
-import SideMenu from "../../components/Navbar/sideMenu";
-import TopBar from "../../components/Topbar/topBar";
+import SideMenu from "../../../components/AdminNavbar/sideMenu";
+import TopBar from "../../../components/Topbar/topBar";
 import AppProvider from "./Context/AppProvider";
 import UserList from "./UserList";
 import ChatWindow from "./ChatWindow";
@@ -41,7 +41,7 @@ function Messages() {
     <>
       <TopBar className="top-bar" />
 
-      <div className='messages_header'>
+      <div className='dashboard-header'>
         <h1>Messages</h1>
       </div>
 

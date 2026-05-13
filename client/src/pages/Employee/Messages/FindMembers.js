@@ -1,5 +1,5 @@
 import React,  { useState, useContext } from 'react';
-import {db} from '../../firebase';
+import {db} from '../../../firebase';
 import { Select, Spin, Avatar, Popover } from 'antd';
 import { query, collection, where, onSnapshot } from 'firebase/firestore';
 import { AppContext } from './Context/AppProvider';

@@ -11,6 +11,7 @@ function UserContextProvider({children}) {
     const [role, setRole] = useState('');
     const [userId, setUserId] = useState('');
     const [branch, setBranch] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState("");
     const [isUserInfoVisible, setIsUserInfoVisible] = useState(false);
     
 
@@ -18,7 +19,7 @@ function UserContextProvider({children}) {
       <UserContext.Provider value={{isAddUsersVisible, setIsAddUsersVisible, 
       userName, setUserName, avatar, setUserAvatar, 
       email, setUserEmail, role, setRole,
-      userId, setUserId, name, setName,
+      userId, setUserId, name, setName, phoneNumber, setPhoneNumber,
     //   branch, setBranch,
       isUserInfoVisible, setIsUserInfoVisible}}>
           {children}
