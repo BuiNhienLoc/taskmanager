@@ -4,6 +4,8 @@
   position: relative;
   overflow: hidden;
   margin: 0 auto;
+  z-index: 0 !important;
+  isolation: isolate; 
 }
 
 .slide {
@@ -14,6 +16,8 @@
   opacity: 0;
   transform: translateY(-50%);
   transition: all 0.5s ease;
+  z-index: 0 !important;
+  pointer-events: none;
 }
 
 .slide img {
@@ -27,6 +31,8 @@
 .current {
   opacity: 1;
   transform: translateY(0);
+  z-index: 1 !important; 
+  pointer-events: auto; 
 }
 
 .next {
@@ -129,4 +135,3 @@ hr {
   background: white;
   width: 50%;
 }
-/*# sourceMappingURL=Slider.css.map */

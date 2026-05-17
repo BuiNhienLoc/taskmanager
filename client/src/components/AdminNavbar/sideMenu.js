@@ -35,6 +35,15 @@ const SideMenu = (props) => {
                             <span>Dashboard</span>
                         </Link>
                     </li>
+                    <li>
+                        <Link to='/owner/dashboard' className='menu-item'>
+                            <div className='menu-icon'>
+                                <AIIcons.AiOutlineTeam />
+                            </div>
+
+                            <span>Employees</span>
+                        </Link>
+                    </li>
                     {/* <li>
                         <Link to='/owner/storage'>
                             <div className='menu-item'>

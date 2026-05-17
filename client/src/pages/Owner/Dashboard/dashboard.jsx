@@ -33,13 +33,13 @@ function Dashboard() {
       title: "Message",
       description: "Contact your employees.",
       icon: <RiMessage2Line />,
-      path: "/employee/messages",
+      path: "/owner/messages",
     },
     {
       title: "Tasks",
       description: "Assign tasks to your employees.",
       icon: <GiChart />,
-      path: "/report/overview",
+      path: "/owner/tasks",
     },
   ];
 
@@ -69,23 +69,22 @@ function Dashboard() {
       <AdminSideMenu />
 
       <main className="dashboard-page">
-        <div className="dashboard-header">
-          <h1>Dashboard</h1>
-        </div>
-
         <Slider />
-
-        <div className="dashboard-grid">
-          {dashboardItems.map((item) => (
-            <Link to={item.path} className="dashboard-card" key={item.title}>
-              <div className="dashboard-card-icon">{item.icon}</div>
-
-              <div className="dashboard-card-content">
-                <h2>{item.title}</h2>
-                <p>{item.description}</p>
-              </div>
-            </Link>
-          ))}
+        <div className="dashboard-content">
+          <div className="dashboard-header">
+            <h1>Dashboard</h1>
+          </div>
+          <div className="dashboard-grid">
+            {dashboardItems.map((item) => (
+              <Link to={item.path} className="dashboard-card" key={item.title}>
+                <div className="dashboard-card-icon">{item.icon}</div>
+                <div className="dashboard-card-content">
+                  <h2>{item.title}</h2>
+                  <p>{item.description}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </main>
      {/* <TopBar></TopBar>
