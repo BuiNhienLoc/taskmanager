@@ -113,7 +113,7 @@ function TopBar() {
                         <li>
                             <a className='menu-item' onClick={()=>logout(id)}>
                                 <div className='icon'>
-                                    {/* <BIIcons.BiLogOut></BIIcons.BiLogOut> */}
+                                    <BIIcons.BiLogOut></BIIcons.BiLogOut>
                                 </div>
                                 <span>Logout</span>
 

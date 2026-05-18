@@ -6,7 +6,7 @@ function SetupAccount() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const token = searchParams.get("token");
+  const token = decodeURIComponent(searchParams.get("token") ?? "");
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -15,6 +15,7 @@ function SetupAccount() {
 
   const handleSetup = async (e) => {
     e.preventDefault();
+    console.log("setup payload:", { token, username, password });
 
     try {
       setLoading(true);

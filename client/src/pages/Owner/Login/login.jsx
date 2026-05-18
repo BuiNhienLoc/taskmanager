@@ -36,14 +36,13 @@ function Login() {
     window.recaptchaVerifier = new RecaptchaVerifier(
       auth,
       "recaptcha-container",
-      {
-        size: "invisible",
-      }
+      { size: "invisible" }
     );
 
     return window.recaptchaVerifier;
   };
 
+  // Clean up the verifier when the component unmounts
   useEffect(() => {
     return () => {
       if (window.recaptchaVerifier) {
@@ -89,6 +88,12 @@ function Login() {
     } catch (error) {
       console.error("Send code error:", error);
 
+      // Always reset the verifier after a failure so the next attempt works
+      if (window.recaptchaVerifier) {
+        window.recaptchaVerifier.clear();
+        window.recaptchaVerifier = null;
+      }
+
       if (error.response?.status === 403) {
         setMessage("This phone number is not registered as an active owner.");
       } else if (error.code === "auth/too-many-requests") {
@@ -130,18 +135,17 @@ function Login() {
 
       if (!ownerSnap.empty) {
         const ownerDoc = ownerSnap.docs[0];
-
         await updateDoc(doc(db, "users", ownerDoc.id), {
           isOnline: true,
           lastLoginAt: new Date(),
         });
       }
 
-      localStorage.setItem("ownerPhoneNumber", phoneNumber);
-      localStorage.setItem("ownerLoggedIn", "true");
+      // REMOVED: localStorage.setItem calls
+      // Firebase Auth already maintains the session securely via its own
+      // persistence layer — no localStorage flags needed.
 
       setMessage("Phone number verified successfully.");
-
       navigate("/owner/dashboard");
     } catch (error) {
       console.error("Verify code error:", error);
@@ -157,14 +161,13 @@ function Login() {
 
       <div className="login-contain">
         <div className="left-side">
-          <div className="title">Welcome Back, owner!</div>
+          <div className="title">Welcome Back, Owner!</div>
 
           <h2>Please verify your phone number to access the system.</h2>
 
           {!codeSent ? (
             <form onSubmit={handleSendCode}>
               <label htmlFor="phone">Phone Number</label>
-
               <input
                 type="tel"
                 id="phone"
@@ -172,7 +175,6 @@ function Login() {
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 placeholder="+11234567890"
               />
-
               <button type="submit" id="button_login" disabled={loading}>
                 {loading ? "Sending..." : "Send Verification Code"}
               </button>
@@ -180,7 +182,6 @@ function Login() {
           ) : (
             <form onSubmit={handleVerifyCode}>
               <label htmlFor="accessCode">Verification Code</label>
-
               <input
                 type="text"
                 id="accessCode"
@@ -189,11 +190,9 @@ function Login() {
                 placeholder="Enter verification code"
                 maxLength="6"
               />
-
               <button type="submit" id="button_login" disabled={loading}>
                 {loading ? "Verifying..." : "Verify Code"}
               </button>
-
               <button
                 type="button"
                 id="button_verify_code"

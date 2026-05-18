@@ -12,11 +12,9 @@ import OwMessages from "./pages/Owner/Messages/Messages";
 import TaskManagement from "./pages/Owner/TaskManager/TaskManager";
 import MyTasks from "./pages/Employee/Tasks/MyTasks";
 
-
 import ProtectedOwnerRoute from "./routes/protectedOwnerRoute";
+import ProtectedEmployeeRoute from "./routes/protectedEmployeeRoute";
 
-
-// Render 1 input field for the phone number, then take that phone number, then send an SMS to that phone number with a verification code, then render another input field for the user to enter the verification code, then verify that the code is correct, and if it is correct, then render a message that says "Phone number verified successfully".
 function App() {
   return (
     <BrowserRouter>
@@ -24,27 +22,57 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/setup-account" element={<SetupAccount />} />
         <Route path="/employee/login" element={<EmployeeLogin />} />
-        <Route path="/employee/dashboard" element={<EmployeeDashboard />} />
-        <Route path="/employee/tasks" element={<MyTasks />} />
-        <Route path="/employee/messages" element={
-            <EmMessages />
-        } />
         <Route path="/owner/login" element={<OwnerLogin />} />
-        <Route path="/owner/dashboard" element={
-          <ProtectedOwnerRoute>
-            <OwnerDashboard />
-          </ProtectedOwnerRoute>
-        } />
-        <Route path="/owner/user-management" element={
-          <ProtectedOwnerRoute>
-            <UserManagement />
-          </ProtectedOwnerRoute>
-        } />
-        <Route path="/owner/messages" element={
-          <ProtectedOwnerRoute>
-            <OwMessages />
-          </ProtectedOwnerRoute>
-        } />
+
+        <Route
+          path="/employee/dashboard"
+          element={
+            <ProtectedEmployeeRoute>
+              <EmployeeDashboard />
+            </ProtectedEmployeeRoute>
+          }
+        />
+        <Route
+          path="/employee/tasks"
+          element={
+            <ProtectedEmployeeRoute>
+              <MyTasks />
+            </ProtectedEmployeeRoute>
+          }
+        />
+        <Route
+          path="/employee/messages"
+          element={
+            <ProtectedEmployeeRoute>
+              <EmMessages />
+            </ProtectedEmployeeRoute>
+          }
+        />
+
+        <Route
+          path="/owner/dashboard"
+          element={
+            <ProtectedOwnerRoute>
+              <OwnerDashboard />
+            </ProtectedOwnerRoute>
+          }
+        />
+        <Route
+          path="/owner/user-management"
+          element={
+            <ProtectedOwnerRoute>
+              <UserManagement />
+            </ProtectedOwnerRoute>
+          }
+        />
+        <Route
+          path="/owner/messages"
+          element={
+            <ProtectedOwnerRoute>
+              <OwMessages />
+            </ProtectedOwnerRoute>
+          }
+        />
         <Route
           path="/owner/tasks"
           element={

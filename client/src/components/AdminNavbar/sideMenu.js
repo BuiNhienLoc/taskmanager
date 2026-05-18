@@ -36,7 +36,7 @@ const SideMenu = (props) => {
                         </Link>
                     </li>
                     <li>
-                        <Link to='/owner/dashboard' className='menu-item'>
+                        <Link to='/owner/user-management' className='menu-item'>
                             <div className='menu-icon'>
                                 <AIIcons.AiOutlineTeam />
                             </div>

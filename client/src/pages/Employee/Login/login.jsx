@@ -1,5 +1,3 @@
-// Render 1 input field for the phone number, then take that phone number, then send an SMS to that phone number with a verification code, then render another input field for the user to enter the verification code, then verify that the code is correct, and if it is correct, then render a message that says "Phone number verified successfully".
-
 import React, { useEffect, useState } from 'react';
 import './login.css';
 import { Link, useNavigate } from "react-router-dom";
@@ -22,7 +20,6 @@ function Login() {
     const navigate = useNavigate();
     useEffect(() => {
         if (loading) {
-            // maybe trigger a loading screen
             return;
         }
         if (user) navigate("/employee/dashboard");
