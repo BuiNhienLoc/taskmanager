@@ -5,14 +5,15 @@ const {
   createEmployee,
   setupEmployeeAccount,
   deleteEmployee,
-  updateEmployee
+  updateEmployee,
 } = require("../controllers/employeeController");
 
-router.post("/", createEmployee);
+const { verifyToken, requireOwner } = require("../middleware/authMiddleware");
+
 router.post("/setup-account", setupEmployeeAccount);
 
-router.delete("/:id", deleteEmployee);
-
-router.put("/:id", updateEmployee);
+router.post("/", verifyToken, requireOwner, createEmployee);
+router.delete("/:id", verifyToken, requireOwner, deleteEmployee);
+router.put("/:id", verifyToken, requireOwner, updateEmployee);
 
 module.exports = router;

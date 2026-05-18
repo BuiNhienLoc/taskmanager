@@ -1,7 +1,7 @@
 const crypto = require("crypto");
-const bcrypt = require("bcrypt");
 const { db, admin } = require("../config/firebase");
 const { sendEmployeeSetupEmail } = require("../services/emailService");
+
 
 const createEmployee = async (req, res) => {
   try {
@@ -49,7 +49,7 @@ const createEmployee = async (req, res) => {
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
 
-    const setupLink = `${process.env.CLIENT_URL}/setup-account?token=${rawToken}`;
+    const setupLink = `${process.env.CLIENT_URL}/setup-account?token=${encodeURIComponent(rawToken)}`;
 
     await sendEmployeeSetupEmail(email, name, setupLink);
 
@@ -95,7 +95,6 @@ const deleteEmployee = async (req, res) => {
     });
   } catch (error) {
     console.error("Delete employee error:", error);
-
     return res.status(500).json({
       success: false,
       message: "Failed to delete employee",
@@ -143,7 +142,10 @@ const setupEmployeeAccount = async (req, res) => {
       });
     }
 
-    const employeeDoc = await db.collection("users").doc(invite.employeeId).get();
+    const employeeDoc = await db
+      .collection("users")
+      .doc(invite.employeeId)
+      .get();
 
     if (!employeeDoc.exists) {
       return res.status(404).json({
@@ -161,12 +163,9 @@ const setupEmployeeAccount = async (req, res) => {
       phoneNumber: employee.phoneNumber,
     });
 
-    const passwordHash = await bcrypt.hash(password, 10);
-
     await db.collection("users").doc(invite.employeeId).update({
       uid: userRecord.uid,
       username,
-      passwordHash,
       isActive: true,
       accountSetupComplete: true,
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -175,10 +174,6 @@ const setupEmployeeAccount = async (req, res) => {
     await db.collection("employeeInvites").doc(inviteDoc.id).update({
       used: true,
       usedAt: admin.firestore.FieldValue.serverTimestamp(),
-    });
-
-    await db.collection("users").doc(invite.employeeId).update({
-      isActive: true,
     });
 
     return res.json({
@@ -230,7 +225,6 @@ const updateEmployee = async (req, res) => {
     });
   } catch (error) {
     console.error("Update employee error:", error);
-
     return res.status(500).json({
       success: false,
       message: "Failed to update employee",
@@ -242,5 +236,5 @@ module.exports = {
   createEmployee,
   setupEmployeeAccount,
   deleteEmployee,
-  updateEmployee
+  updateEmployee,
 };
