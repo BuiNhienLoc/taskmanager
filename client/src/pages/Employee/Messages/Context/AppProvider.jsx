@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react'
-import {collection, query, where, onSnapshot, orderBy} from 'firebase/firestore'
-import {db, auth} from '../../../../firebase';
+import React, { useState, useEffect } from 'react'
+import { collection, query, where, onSnapshot, orderBy } from 'firebase/firestore'
+import { db, auth } from '../../../../firebase';
 
 export const AppContext = React.createContext();
 
-function AppProvider({children}) {
+function AppProvider({ children }) {
 
     const [isAddRoomVisible, setIsAddRoomVisible] = useState(false);
     const [isOpenMembersVisible, setIsOpenmembersVisible] = useState(false);
@@ -21,141 +21,150 @@ function AppProvider({children}) {
     const [memberInfo, setMemberInfo] = useState(false);
 
     const clearState = () => {
-      setSelectedRoomId('');
-      setIsAddRoomVisible(false);
-      setIsInviteMemberVisible(false);
-      setSelectedUserId('');
-    }
+        setSelectedRoomId('');
+        setIsAddRoomVisible(false);
+        setIsInviteMemberVisible(false);
+        setSelectedUserId('');
+    };
+    
+    const [historyFrom, setHistoryFrom] = useState([]);
+    const [historyTo, setHistoryTo] = useState([]);
 
     useEffect(() => {
-      if (!currentUserId) return;
+        if (!currentUserId) return;
 
-      const collectionRef = collection(db, "userhistory");
-      const q = query(collectionRef, where("from", "==", currentUserId));
-      const h = query(collectionRef, where("to", "==", currentUserId));
+        const collectionRef = collection(db, "userhistory");
+        const q = query(collectionRef, where("from", "==", currentUserId));
 
-      let history = [];
-
-      const unsubscribeFrom = onSnapshot(q, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          history.push(doc.data().to);
+        const unsub = onSnapshot(q, (snap) => {
+            setHistoryFrom(snap.docs.map((doc) => doc.data().to));
         });
 
-        const unsubscribeTo = onSnapshot(h, (querySnapshotTo) => {
-          querySnapshotTo.forEach((doc) => {
-            history.push(doc.data().from);
-          });
-
-          const uniqueHistory = Array.from(new Set(history));
-          setUserHistory(uniqueHistory);
-        });
-
-        return () => unsubscribeTo();
-      });
-
-      return () => unsubscribeFrom();
-    }, [currentUserId, selectedUserId]);
-  
-
-    useEffect(()=>{
-      const collectionRef = collection(db, "users");
-  
-      const unsubscribe = onSnapshot(collectionRef, (querySnapshot) => {
-          let users = [];
-          querySnapshot.forEach((doc)=>{
-              users.push({...doc.data(), id: doc.data().uid, id_firebase: doc.id});
-          })
-          setUsers(users);
-        });
-        return unsubscribe;
-    }, [])
-
-    useEffect(() => {
-      if (!currentUserId) return;
-
-      const collectionRef = collection(db, "rooms");
-      const q = query(
-        collectionRef,
-        where("members", "array-contains", currentUserId),
-        orderBy("createdAt", "asc")
-      );
-
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const rooms = [];
-        querySnapshot.forEach((doc) => {
-          rooms.push({ ...doc.data(), id: doc.id });
-        });
-        setUsersRooms(rooms);
-      });
-
-      return () => unsubscribe();
+        return () => unsub();
     }, [currentUserId]);
 
-    
+    useEffect(() => {
+        if (!currentUserId) return;
+
+        const collectionRef = collection(db, "userhistory");
+        const q = query(collectionRef, where("to", "==", currentUserId));
+
+        const unsub = onSnapshot(q, (snap) => {
+            setHistoryTo(snap.docs.map((doc) => doc.data().from));
+        });
+
+        return () => unsub();
+    }, [currentUserId]);
+
+    useEffect(() => {
+        const merged = Array.from(new Set([...historyFrom, ...historyTo]));
+        setUserHistory(merged);
+    }, [historyFrom, historyTo]);
+
+    useEffect(() => {
+        const collectionRef = collection(db, "users");
+
+        const unsubscribe = onSnapshot(collectionRef, (querySnapshot) => {
+            let users = [];
+            querySnapshot.forEach((doc) => {
+                users.push({ ...doc.data(), id: doc.data().uid, id_firebase: doc.id });
+            });
+            setUsers(users);
+        });
+
+        return () => unsubscribe();
+    }, []);
+
+    useEffect(() => {
+        if (!currentUserId) return;
+
+        const collectionRef = collection(db, "rooms");
+        const q = query(
+            collectionRef,
+            where("members", "array-contains", currentUserId),
+            orderBy("createdAt", "asc")
+        );
+
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const rooms = [];
+            querySnapshot.forEach((doc) => {
+                rooms.push({ ...doc.data(), id: doc.id });
+            });
+            setUsersRooms(rooms);
+        });
+
+        return () => unsubscribe();
+    }, [currentUserId]);
+
     const selectedRoom = React.useMemo(
-      () => usersRoom.find((room) => room.id === selectedRoomId) || {},
-      [usersRoom, selectedRoomId]
+        () => usersRoom.find((room) => room.id === selectedRoomId) || {},
+        [usersRoom, selectedRoomId]
     );
 
     const currentUser = React.useMemo(
-      () => users.find((user) => user.uid === currentUserId) || {},
-      [users, currentUserId]
-    )
+        () => users.find((user) => user.uid === currentUserId) || {},
+        [users, currentUserId]
+    );
 
     const selectedUser = React.useMemo(
-      () => users.find((user)=> user.uid === selectedUserId)|| {},
-      [users, selectedUserId]
-    )
+        () => users.find((user) => user.uid === selectedUserId) || {},
+        [users, selectedUserId]
+    );
 
     useEffect(() => {
-      if (selectedRoom.members){
+        if (!selectedRoom.members) return;
+
         const collectionRefUser = collection(db, "users");
         const h = query(collectionRefUser, where('uid', 'in', selectedRoom.members));
 
         const unsubscribe = onSnapshot(h, (querySnapshot) => {
-          let members = [];
-          querySnapshot.forEach((doc)=>{
-            members.push({...doc.data(), id:doc.data().uid});
-          })
-          setMembers(members);
+            let members = [];
+            querySnapshot.forEach((doc) => {
+                members.push({ ...doc.data(), id: doc.data().uid });
+            });
+            setMembers(members);
         });
-        return unsubscribe;
-      }
-    }, [selectedRoom.members])
 
+        return () => unsubscribe();
+    }, [selectedRoom.members]);
 
     useEffect(() => {
-      if (userHistory.length>0){
+        if (userHistory.length === 0) return;
+
         const collectionRef = collection(db, "users");
+        const q = query(
+            collectionRef,
+            where('uid', 'in', userHistory),
+            orderBy('last_history', 'desc')
+        );
 
-        const q = query(collectionRef, where('uid', 'in', userHistory), orderBy('last_history','desc'))
-
-        const unsubscribe = onSnapshot(q, (querySnapshot)=> {
-          let recipients = [];
-          querySnapshot.forEach((doc)=>{
-            recipients.push({...doc.data(), id: doc.data().uid});
-          })
-          setRecipients(recipients);
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            let recipients = [];
+            querySnapshot.forEach((doc) => {
+                recipients.push({ ...doc.data(), id: doc.data().uid });
+            });
+            setRecipients(recipients);
         });
-        return unsubscribe;
-      }
-    }, [userHistory])
 
+        return () => unsubscribe();
+    }, [userHistory]);
 
-  return (
-    <AppContext.Provider value={{isAddRoomVisible, setIsAddRoomVisible, 
-    selectedRoomId, setSelectedRoomId, 
-    usersRoom, selectedRoom, members,
-    isOpenMembersVisible, setIsOpenmembersVisible,
-    isInviteMemberVisible, setIsInviteMemberVisible,
-    users, setUsers, currentUser,
-    selectedUser, selectedUserId, setSelectedUserId,
-    userHistory, setUserHistory, recipients, setRecipients,
-    clearState, targetchat, setTargetChat,
-    memberInfo, setMemberInfo}}>
-        {children}
-    </AppContext.Provider>
-  )
+    return (
+        <AppContext.Provider value={{
+            isAddRoomVisible, setIsAddRoomVisible,
+            selectedRoomId, setSelectedRoomId,
+            usersRoom, selectedRoom, members,
+            isOpenMembersVisible, setIsOpenmembersVisible,
+            isInviteMemberVisible, setIsInviteMemberVisible,
+            users, setUsers, currentUser,
+            selectedUser, selectedUserId, setSelectedUserId,
+            userHistory, setUserHistory, recipients, setRecipients,
+            clearState, targetchat, setTargetChat,
+            memberInfo, setMemberInfo
+        }}>
+            {children}
+        </AppContext.Provider>
+    );
 }
 
-export default AppProvider
+export default AppProvider;

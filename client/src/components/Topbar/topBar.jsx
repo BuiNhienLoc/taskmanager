@@ -4,68 +4,90 @@ import * as AIIcons from 'react-icons/ai';
 import { storage, auth, db, logout } from "../../firebase";
 import { ref, getDownloadURL, uploadBytes, deleteObject } from "firebase/storage";
 import { getDoc, doc, updateDoc, collection, query, where, onSnapshot } from 'firebase/firestore';
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import profilePic from '../assets/profile.png';
 import * as BIIcons from 'react-icons/bi';
-import './topBar.css'
+import './topBar.css';
+
+const MAX_FILE_SIZE_MB = 5;
 
 function TopBar() {
     const [open, setOpen] = useState(false);
     const [img, setImg] = useState("");
     const [user, setUser] = useState([]);
     const [id, setId] = useState();
+    const [uploadError, setUploadError] = useState("");
     const navigate = useNavigate();
 
-    useEffect(()=>{
+    useEffect(() => {
         if (!auth.currentUser) return;
 
         const q = query(
-        collection(db, "users"),
-        where("uid", "==", auth.currentUser.uid)
+            collection(db, "users"),
+            where("uid", "==", auth.currentUser.uid)
         );
-  
+
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            let user = [];
-            querySnapshot.forEach((doc)=>{
-                user?.push({...doc.data(), id: doc.id});
-            })
-            if (user.length > 0) {
-                setUser(user[0]);
-                setId(user[0].id);
-            }
+            let users = [];
+            querySnapshot.forEach((doc) => {
+                users.push({ ...doc.data(), id: doc.id });
             });
-            return unsubscribe;
-    }, [auth.currentUser?.uid])
+            if (users.length > 0) {
+                setUser(users[0]);
+                setId(users[0].id);
+            }
+        });
+
+        return () => unsubscribe();
+    }, [auth.currentUser?.uid]);
 
     useEffect(() => {
+        if (!img) return;
 
-        if (img) {
-            const uploadImg = async () => {
-                const imgRef = ref(
-                    storage,
-                    `avatar/${new Date().getTime()} - ${img.name}`
-                );
-                try {
-                    if (user?.avatarPath) {
-                        await deleteObject(ref(storage, user?.avatarPath));
-                    }
-                    const snap = await uploadBytes(imgRef, img);
-                    const url = await getDownloadURL(ref(storage, snap.ref.fullPath));
+        const uploadImg = async () => {
+            setUploadError("");
+            const imgRef = ref(
+                storage,
+                `avatar/${new Date().getTime()} - ${img.name}`
+            );
 
-                    await updateDoc(doc(db, "users", user?.id), {
-                        avatar: url,
-                        avatarPath: snap.ref.fullPath,
+            try {
+                const snap = await uploadBytes(imgRef, img);
+                const url = await getDownloadURL(ref(storage, snap.ref.fullPath));
+
+                if (user?.avatarPath) {
+                    await deleteObject(ref(storage, user.avatarPath)).catch(() => {
                     });
-
-                    setImg("");
-                } catch (err) {
-                    console.log(err.message);
                 }
-            };
-            uploadImg();
-        }
+
+                await updateDoc(doc(db, "users", user?.id), {
+                    avatar: url,
+                    avatarPath: snap.ref.fullPath,
+                });
+
+                setImg("");
+            } catch (err) {
+                console.error("Avatar upload error:", err.message);
+                setUploadError("Upload failed. Please try again.");
+            }
+        };
+
+        uploadImg();
     }, [img]);
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+            setUploadError(`Image must be under ${MAX_FILE_SIZE_MB} MB.`);
+            e.target.value = "";
+            return;
+        }
+
+        setUploadError("");
+        setImg(file);
+    };
 
     return (
         <div className='top-menu'>
@@ -79,9 +101,8 @@ function TopBar() {
                 <div className='account-info'>
                     <div className='username'>{user?.name}</div>
                     <div>{user?.email}</div>
-
                 </div>
-                <div className={`dropdown-menu ${(open ? "open" : "")}`}>
+                <div className={`dropdown-menu ${open ? "open" : ""}`}>
                     <ul>
                         <li>
                             <a className='profile-item'>
@@ -92,40 +113,39 @@ function TopBar() {
                                             <label htmlFor="photo">
                                                 <Camera />
                                             </label>
-                                            <input type="file"
+                                            <input
+                                                type="file"
                                                 accept="image/*"
                                                 style={{ display: "none" }}
                                                 id='photo'
-                                                onChange={(e) => setImg(e.target.files[0])}
+                                                onChange={handleFileChange}
                                             />
                                         </div>
-
                                     </div>
                                 </div>
                                 <div className='account-info'>
                                     <div className='username'>{user?.name}</div>
                                     <div>{user?.email}</div>
+                                    {uploadError && (
+                                        <div style={{ color: 'red', fontSize: 12 }}>{uploadError}</div>
+                                    )}
                                     <div className='small-text'>View account's information</div>
-
                                 </div>
                             </a>
                         </li>
                         <li>
-                            <a className='menu-item' onClick={()=>logout(id)}>
+                            <a className='menu-item' onClick={() => logout(id).then(() => navigate("/"))}>
                                 <div className='icon'>
                                     <BIIcons.BiLogOut></BIIcons.BiLogOut>
                                 </div>
                                 <span>Logout</span>
-
                             </a>
                         </li>
                     </ul>
-
                 </div>
             </div>
-
         </div>
-    )
+    );
 }
 
-export default TopBar
+export default TopBar;

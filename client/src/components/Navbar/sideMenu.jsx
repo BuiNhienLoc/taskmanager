@@ -12,7 +12,7 @@ const SideMenu = (props) => {
     const [inactive, setInactive] = useState(true);
 
     return (
-        <div onMouseEnter={() => { setInactive(!inactive) }} onMouseLeave={() => { setInactive(!inactive) }} className={`side-menu ${inactive ? "inactive" : ""}`}>
+        <div onMouseEnter={() => { setInactive(false) }} onMouseLeave={() => { setInactive(true) }} className={`side-menu ${inactive ? "inactive" : ""}`}>
             <div className='top-section'>
                 <div className='logo'>
                     < img src={icon} alt='logo'/>

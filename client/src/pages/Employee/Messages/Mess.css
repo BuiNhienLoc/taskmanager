@@ -40,6 +40,11 @@
     right: 0px;
     
 }
+
+.chat-show .receiver .author {
+    color: #013567;
+}
+
 .chat-show{
     top: 100px;
 

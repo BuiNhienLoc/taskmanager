@@ -1,36 +1,22 @@
-#Active {
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 17px;
-    left: 1215px;
-    top: 94px;
-}
-
-#Inactive {
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 700;
-    position: absolute;
-    font-size: 17px;
-    top: 150px;
-}
-
-
 .Activity {
-    position: relative;
-    top: 30px;
-    padding-left: 20px;
-    height: 100vh;
+  position: static;
+  padding: 16px;
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
-
-.active {
-    position: absolute;
-    top: 35px;
-}
-
+.active,
 .inactive {
-    position: absolute;
-    top: 310px;
+  position: static;
+  margin-bottom: 24px;
+}
+
+#Active,
+#Inactive {
+  position: static;
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  margin-bottom: 10px;
 }

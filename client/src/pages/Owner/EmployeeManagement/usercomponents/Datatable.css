@@ -7,43 +7,21 @@
   width: 100%;
   font-size: 24px;
   color: gray;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-}
-
-.datatable .datatableTitle .link {
-  text-decoration: none;
-  color: green;
-  font-size: 16px;
-  font-weight: 400;
-  border: 1px solid green;
-  padding: 5px;
-  border-radius: 5px;
-  cursor: pointer;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .datatable .cellWithImg {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  align-items: center;
 }
 
 .datatable .cellWithImg .cellImg {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   margin-right: 20px;
 }
 
@@ -63,13 +41,9 @@
 }
 
 .datatable .cellAction {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  gap: 15px;
+  align-items: center;
+  gap: 10px;
 }
 
 .datatable .cellAction .viewButton {
@@ -80,6 +54,18 @@
   cursor: pointer;
 }
 
+.datatable .cellAction .scheduleButton {
+  padding: 2px 5px;
+  border-radius: 5px;
+  color: #007a7a;
+  border: 1px dotted rgba(0, 152, 153, 0.7);
+  cursor: pointer;
+}
+
+.datatable .cellAction .scheduleButton:hover {
+  background-color: rgba(0, 152, 153, 0.08);
+}
+
 .datatable .cellAction .deleteButton {
   padding: 2px 5px;
   border-radius: 5px;
@@ -87,4 +73,61 @@
   border: 1px dotted rgba(220, 20, 60, 0.6);
   cursor: pointer;
 }
-/*# sourceMappingURL=Datatable.css.map */
+
+/* ── Schedule modal ───────────────────────────────────────────────────────── */
+
+.schedule-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 4px 0;
+}
+
+.schedule-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+}
+
+.schedule-day-label {
+  display: flex;
+  align-items: center;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #013567;
+  width: 120px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.schedule-times {
+  display: flex;
+  align-items: center;
+  transition: opacity 0.2s;
+}
+
+.schedule-times.disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.schedule-time-input {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+}
+
+.schedule-time-input:disabled {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
+}

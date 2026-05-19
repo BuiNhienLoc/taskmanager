@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { setupEmployeeAccount } from "../../../api/employeeApi";
+import "../Login/login.css"; 
 
 function SetupAccount() {
   const [searchParams] = useSearchParams();
@@ -15,25 +16,21 @@ function SetupAccount() {
 
   const handleSetup = async (e) => {
     e.preventDefault();
-    console.log("setup payload:", { token, username, password });
+
+    if (!token) {
+      setMessage("Invalid setup link. Please request a new invite.");
+      return;
+    }
 
     try {
       setLoading(true);
-
-      await setupEmployeeAccount({
-        token,
-        username,
-        password,
-      });
-
+      await setupEmployeeAccount({ token, username, password });
       setMessage("Account setup complete. Redirecting to login...");
-
-      setTimeout(() => {
-        navigate("/employee/login");
-      }, 1000);
+      setTimeout(() => navigate("/employee/login"), 1500);
     } catch (err) {
       console.error(err);
-      setMessage("Invalid, expired, or used setup link.");
+      const msg = err.response?.data?.message;
+      setMessage(msg || "Invalid, expired, or already-used setup link.");
     } finally {
       setLoading(false);
     }
@@ -44,7 +41,6 @@ function SetupAccount() {
       <div className="login-contain">
         <div className="left-side">
           <div className="title">Set Up Account</div>
-
           <h2>Create your employee login.</h2>
 
           <form onSubmit={handleSetup}>
@@ -52,7 +48,7 @@ function SetupAccount() {
             <input
               id="username"
               type="text"
-              placeholder="Enter username"
+              placeholder="Choose a username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
@@ -62,7 +58,7 @@ function SetupAccount() {
             <input
               id="password"
               type="password"
-              placeholder="Enter password"
+              placeholder="Choose a password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -73,7 +69,14 @@ function SetupAccount() {
             </button>
           </form>
 
-          {message && <p>{message}</p>}
+          {message && (
+            <p style={{
+              marginTop: 16,
+              color: message.includes("complete") ? "green" : "red"
+            }}>
+              {message}
+            </p>
+          )}
         </div>
       </div>
     </div>

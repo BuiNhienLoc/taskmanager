@@ -19,6 +19,19 @@ const createTask = async (req, res) => {
       });
     }
 
+    const employeeSnap = await db
+      .collection("users")
+      .where("uid", "==", assignedTo)
+      .limit(1)
+      .get();
+
+    if (employeeSnap.empty) {
+      return res.status(404).json({
+        success: false,
+        message: "Assigned employee not found",
+      });
+    }
+
     const taskRef = await db.collection("tasks").add({
       title,
       description: description || "",
@@ -55,16 +68,10 @@ const getTasks = async (req, res) => {
       ...doc.data(),
     }));
 
-    return res.json({
-      success: true,
-      tasks,
-    });
+    return res.json({ success: true, tasks });
   } catch (error) {
     console.error("Get tasks error:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Failed to get tasks",
-    });
+    return res.status(500).json({ success: false, message: "Failed to get tasks" });
   }
 };
 
@@ -82,16 +89,10 @@ const getEmployeeTasks = async (req, res) => {
       ...doc.data(),
     }));
 
-    return res.json({
-      success: true,
-      tasks,
-    });
+    return res.json({ success: true, tasks });
   } catch (error) {
     console.error("Get employee tasks error:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Failed to get employee tasks",
-    });
+    return res.status(500).json({ success: false, message: "Failed to get employee tasks" });
   }
 };
 
@@ -104,16 +105,10 @@ const updateTask = async (req, res) => {
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
     });
 
-    return res.json({
-      success: true,
-      message: "Task updated",
-    });
+    return res.json({ success: true, message: "Task updated" });
   } catch (error) {
     console.error("Update task error:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Failed to update task",
-    });
+    return res.status(500).json({ success: false, message: "Failed to update task" });
   }
 };
 
@@ -123,16 +118,10 @@ const deleteTask = async (req, res) => {
 
     await db.collection("tasks").doc(id).delete();
 
-    return res.json({
-      success: true,
-      message: "Task deleted",
-    });
+    return res.json({ success: true, message: "Task deleted" });
   } catch (error) {
     console.error("Delete task error:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Failed to delete task",
-    });
+    return res.status(500).json({ success: false, message: "Failed to delete task" });
   }
 };
 

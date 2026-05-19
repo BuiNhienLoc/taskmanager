@@ -304,5 +304,4 @@ Add screenshots in this section before submission.
 
 ## Future Improvements
 - Add stronger Firestore security rules
-- Persist Socket.IO messages to Firestore
 

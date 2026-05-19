@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-// import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import { useState, useEffect, useRef } from "react";
 import { sliderData } from "./slider-data";
 import "./slider.css";
 
@@ -7,53 +6,32 @@ const Slider = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const slideLength = sliderData.length;
 
-  const autoScroll = true;
-  let slideInterval;
-  let intervalTime = 10000;
+  const slideInterval = useRef(null);
+  const intervalTime = 10000;
 
   const nextSlide = () => {
-    setCurrentSlide(currentSlide === slideLength - 1 ? 0 : currentSlide + 1);
-    console.log("next");
+    setCurrentSlide((prev) => (prev === slideLength - 1 ? 0 : prev + 1));
   };
 
-  const prevSlide = () => {
-    setCurrentSlide(currentSlide === 0 ? slideLength - 1 : currentSlide - 1);
-    console.log("prev");
-  };
-
-  function auto() {
-    slideInterval = setInterval(nextSlide, intervalTime);
-  }
-
   useEffect(() => {
-    setCurrentSlide(0);
-  }, []);
-
-  useEffect(() => {
-    if (autoScroll) {
-      auto();
-    }
-    return () => clearInterval(slideInterval);
+    slideInterval.current = setInterval(nextSlide, intervalTime);
+    return () => clearInterval(slideInterval.current);
   }, [currentSlide]);
 
   return (
     <div className="slider">
-      {/* <MdKeyboardArrowUp className="arrow prev" onClick={prevSlide} />
-      <MdKeyboardArrowDown className="arrow next" onClick={nextSlide} /> */}
-      {sliderData.map((slide, index) => {
-        return (
-          <div
-            className={index === currentSlide ? "slide current" : "slide"}
-            key={index}
-          >
-            {index === currentSlide && (
-              <div>
-                <img src={slide.image} alt="slide" className="image" />
-              </div>
-            )}
-          </div>
-        );
-      })}
+      {sliderData.map((slide, index) => (
+        <div
+          className={index === currentSlide ? "slide current" : "slide"}
+          key={index}
+        >
+          {index === currentSlide && (
+            <div>
+              <img src={slide.image} alt="slide" className="image" />
+            </div>
+          )}
+        </div>
+      ))}
     </div>
   );
 };

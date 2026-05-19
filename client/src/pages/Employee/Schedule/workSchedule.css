@@ -1,0 +1,83 @@
+.work-schedule {
+  margin-top: 32px;
+}
+
+.ws-title {
+  font-family: "Inter", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #013567;
+  margin-bottom: 16px;
+}
+
+.ws-empty {
+  font-family: "Inter", sans-serif;
+  color: #888;
+  font-size: 14px;
+}
+
+.ws-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.ws-day-card {
+  border-radius: 12px;
+  padding: 14px 12px;
+  text-align: center;
+  box-shadow: 2px 2px 6px #ededed;
+  transition: transform 0.15s ease;
+}
+
+.ws-day-card:hover {
+  transform: translateY(-2px);
+}
+
+.ws-day-card.active {
+  background-color: #fff;
+  border: 1.5px solid #009899;
+}
+
+.ws-day-card.off {
+  background-color: #f5f5f5;
+  border: 1.5px solid #e0e0e0;
+  opacity: 0.6;
+}
+
+.ws-day-name {
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #013567;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ws-day-card.off .ws-day-name {
+  color: #999;
+}
+
+.ws-hours {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  color: #009899;
+  font-weight: 500;
+}
+
+.ws-dash {
+  color: #bbb;
+  font-size: 11px;
+}
+
+.ws-off-label {
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  color: #bbb;
+  font-style: italic;
+}
