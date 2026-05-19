@@ -204,7 +204,7 @@ function Login() {
             </form>
           )}
 
-          {message && <p className="message">{message}</p>}
+          {message && <p className="message-login">{message}</p>}
         </div>
       </div>
     </div>
